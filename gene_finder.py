@@ -30,8 +30,17 @@ def get_complement(nucleotide):
     >>> get_complement('C')
     'G'
     """
-    # TODO: implement this
-    pass
+
+    if nucleotide == "A":
+        return "T"
+    elif nucleotide == "T":
+        return "A"
+    elif nucleotide == "C":
+        return "G"
+    elif nucleotide == "G":
+        return "C"
+    else:
+        return "Failed, check nucleotide letters!"
 
 
 def get_reverse_complement(dna):
@@ -45,9 +54,15 @@ def get_reverse_complement(dna):
     >>> get_reverse_complement("CCGCGTTCA")
     'TGAACGCGG'
     """
-    # TODO: implement this
-    pass
 
+    reversed = []
+    for nucleotide in dna:
+        backwards = dna[::-1] # Found out how to do this on https://www.educative.io/edpresso/how-do-you-reverse-a-string-in-python
+    for nucleotide in range(len(dna)):
+        reversed_nucleotide = get_complement(backwards[nucleotide])
+        reversed.append(reversed_nucleotide)
+    final_reversed_string = ''.join(reversed)
+    return final_reversed_string
 
 def rest_of_ORF(dna):
     """ Takes a DNA sequence that is assumed to begin with a start
@@ -62,8 +77,65 @@ def rest_of_ORF(dna):
     >>> rest_of_ORF("ATGAGATAGG")
     'ATGAGA'
     """
-    # TODO: implement this
-    pass
+
+    codons = [dna[i:i+3] for i in range(0, len(dna), 3)] # found this method on https://stackoverflow.com/questions/22571259/split-a-string-into-n-equal-parts
+    stop_codons = ["TGA", "TAA", "TAG"]
+    print(codons)
+    for abc in range(0,20):
+        if codons[0] == stop_codons[0]:
+            stop_codon_position = abc
+            print(stop_codon_position)
+        elif codons[0] == stop_codons[1]:
+            stop_codon_position = abc
+            print(stop_codon_position)
+        elif codons[0] == stop_codons[2]:
+            stop_codon_position = abc
+            print(stop_codon_position)
+
+
+
+
+    # try:
+    #     codon_stop_position = codons.index("TGA")
+    # except ValueError:
+    #     codon_stop_position = codons.index("TAA")
+    # except ValueError:
+    #     codon_stop_position = codons.index("TAG")
+    # print(codon_stop_position)
+
+    # possible_stop_codon_position = 0
+    # possible_stop_codon_position = dna[possible_stop_codon_position:].find("TGA" or "TAA" or "TAG")
+    # print(possible_stop_codon_position)
+    #
+    # for i in range(len(dna)): # brute force to make sure I've done this enought times
+    #     if possible_stop_codon_position % 3 == 0:
+    #         stop_codon_position = possible_stop_codon_position
+    #         return dna[:possible_stop_codon_position]
+    #         break
+    #
+    #     else:
+    #         possible_stop_codon_position = dna[possible_stop_codon_position + 3:].find("TGA" or "TAA" or "TAG")
+    #         print(possible_stop_codon_position)
+
+
+    # possible_stop_codon_position = 0
+    #
+    # possible_stop_codon_position = dna[possible_stop_codon_position:].find("TGA" or "TAA" or "TAG")
+    # for i in range(20):
+    #     if possible_stop_codon_position % 3 == 0:
+    #         stop_codon_position = possible_stop_codon_position
+    #         return dna[:possible_stop_codon_position]
+    #         break
+    #     else:
+    #         new_possible_stop_codon_position = dna[possible_stop_codon_position:].find("TGA" or "TAA" or "TAG")
+    #         print(new_possible_stop_codon_position)
+
+
+
+    # if "TGA" or "TAA" or "TAG" in dna:
+    #     asdf
+    # else:
+    #     return dna
 
 
 def find_all_ORFs_oneframe(dna):
@@ -163,4 +235,5 @@ def gene_finder(dna):
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod()
+    #doctest.testmod()
+    doctest.run_docstring_examples(rest_of_ORF, globals(), verbose=True)
