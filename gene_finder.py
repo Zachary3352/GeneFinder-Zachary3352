@@ -76,66 +76,17 @@ def rest_of_ORF(dna):
     'ATG'
     >>> rest_of_ORF("ATGAGATAGG")
     'ATGAGA'
+    >>> rest_of_ORF("ATGTGCCC")
+    'ATGTGCCC'
     """
 
-    codons = [dna[i:i+3] for i in range(0, len(dna), 3)] # found this method on https://stackoverflow.com/questions/22571259/split-a-string-into-n-equal-parts
-    stop_codons = ["TGA", "TAA", "TAG"]
-    print(codons)
-    for abc in range(0,20):
-        if codons[0] == stop_codons[0]:
-            stop_codon_position = abc
-            print(stop_codon_position)
-        elif codons[0] == stop_codons[1]:
-            stop_codon_position = abc
-            print(stop_codon_position)
-        elif codons[0] == stop_codons[2]:
-            stop_codon_position = abc
-            print(stop_codon_position)
-
-
-
-
-    # try:
-    #     codon_stop_position = codons.index("TGA")
-    # except ValueError:
-    #     codon_stop_position = codons.index("TAA")
-    # except ValueError:
-    #     codon_stop_position = codons.index("TAG")
-    # print(codon_stop_position)
-
-    # possible_stop_codon_position = 0
-    # possible_stop_codon_position = dna[possible_stop_codon_position:].find("TGA" or "TAA" or "TAG")
-    # print(possible_stop_codon_position)
-    #
-    # for i in range(len(dna)): # brute force to make sure I've done this enought times
-    #     if possible_stop_codon_position % 3 == 0:
-    #         stop_codon_position = possible_stop_codon_position
-    #         return dna[:possible_stop_codon_position]
-    #         break
-    #
-    #     else:
-    #         possible_stop_codon_position = dna[possible_stop_codon_position + 3:].find("TGA" or "TAA" or "TAG")
-    #         print(possible_stop_codon_position)
-
-
-    # possible_stop_codon_position = 0
-    #
-    # possible_stop_codon_position = dna[possible_stop_codon_position:].find("TGA" or "TAA" or "TAG")
-    # for i in range(20):
-    #     if possible_stop_codon_position % 3 == 0:
-    #         stop_codon_position = possible_stop_codon_position
-    #         return dna[:possible_stop_codon_position]
-    #         break
-    #     else:
-    #         new_possible_stop_codon_position = dna[possible_stop_codon_position:].find("TGA" or "TAA" or "TAG")
-    #         print(new_possible_stop_codon_position)
-
-
-
-    # if "TGA" or "TAA" or "TAG" in dna:
-    #     asdf
-    # else:
-    #     return dna
+    i = 0
+    while i < len(dna):
+        if dna[i:i+3] == codons[10][0] or dna[i:i+3] == codons[10][1] or dna[i:i+3] == codons[10][2]:
+            return dna[:i]
+            break
+        i = i+3
+    return dna
 
 
 def find_all_ORFs_oneframe(dna):
@@ -151,9 +102,13 @@ def find_all_ORFs_oneframe(dna):
     >>> find_all_ORFs_oneframe("ATGCATGAATGTAGATAGATGTGCCC")
     ['ATGCATGAATGTAGA', 'ATGTGCCC']
     """
-    # TODO: implement this
-    pass
-
+    i = 0
+    orf1 = []
+    while i < len(dna):
+        if dna[i:i+3] == codons[3][0]:
+            orf1.append(rest_of_ORF(dna[i:]))
+        i = i+3
+    return orf1
 
 def find_all_ORFs(dna):
     """ Finds all non-nested open reading frames in the given DNA sequence in
@@ -168,8 +123,12 @@ def find_all_ORFs(dna):
     >>> find_all_ORFs("ATGCATGAATGTAG")
     ['ATGCATGAATGTAG', 'ATGAATGTAG', 'ATG']
     """
-    # TODO: implement this
-    pass
+    i = 0
+    all_orfs = []
+    while i < 3:
+        all_orfs = all_orfs + find_all_ORFs_oneframe(dna[i:])
+        i = i+1
+    return all_orfs
 
 
 def find_all_ORFs_both_strands(dna):
@@ -236,4 +195,4 @@ def gene_finder(dna):
 if __name__ == "__main__":
     import doctest
     #doctest.testmod()
-    doctest.run_docstring_examples(rest_of_ORF, globals(), verbose=True)
+    doctest.run_docstring_examples(find_all_ORFs, globals(), verbose=True)
