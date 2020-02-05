@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-YOUR HEADER COMMENT HERE
 
-@author: YOUR NAME HERE
+@author: Zachary Sherman (Zachary3352)
 
 """
 
@@ -107,6 +106,7 @@ def find_all_ORFs_oneframe(dna):
     while i < len(dna):
         if dna[i:i+3] == codons[3][0]:
             orf1.append(rest_of_ORF(dna[i:]))
+            i = i + len(orf1) - 3
         i = i+3
     return orf1
 
@@ -140,8 +140,8 @@ def find_all_ORFs_both_strands(dna):
     >>> find_all_ORFs_both_strands("ATGCGAATGTAGCATCAAA")
     ['ATGCGAATG', 'ATGCTACATTCGCAT']
     """
-    # TODO: implement this
-    pass
+    dna_reversed = get_reverse_complement(dna)
+    return find_all_ORFs(dna) + find_all_ORFs(dna_reversed)
 
 
 def longest_ORF(dna):
@@ -195,4 +195,4 @@ def gene_finder(dna):
 if __name__ == "__main__":
     import doctest
     #doctest.testmod()
-    doctest.run_docstring_examples(find_all_ORFs, globals(), verbose=True)
+    doctest.run_docstring_examples(find_all_ORFs_both_strands, globals(), verbose=True)
