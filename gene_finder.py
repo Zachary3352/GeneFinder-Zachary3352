@@ -120,6 +120,7 @@ def find_all_ORFs(dna):
     >>> find_all_ORFs("ATGCATGAATGTAG")
     ['ATGCATGAATGTAG', 'ATGAATGTAG', 'ATG']
     """
+
     i = 0
     all_orfs = []
     while i < 3:
@@ -174,7 +175,7 @@ def longest_ORF_noncoding(dna, num_trials):
             longest_found_ORF = found_ORF
     return longest_found_ORF
 
-print(longest_ORF_noncoding("ATATGAAGCCCTAGCAGATCCAGTAAGCATAAGTGTGTTAGACATGTAATAGCACAC", 200)) # This works yay!
+#print(longest_ORF_noncoding("ATATGAAGCCCTAGCAGATCCAGTAAGCATAAGTGTGTTAGACATGTAATAGCACAC", 200)) # This works yay!
 
 def coding_strand_to_AA(dna):
     """ Computes the Protein encoded by a sequence of DNA.  This function
@@ -190,9 +191,18 @@ def coding_strand_to_AA(dna):
         >>> coding_strand_to_AA("ATGCCCGCTTT")
         'MPA'
     """
-    # TODO: implement this
-    pass
+    DNA_list = []
+    AA_list = []
 
+    for i in range(len(dna)//3):
+        DNA_list.append(dna[(i+1)*3-3:(i+1)*3])
+
+    for i in range(len(DNA_list)):
+        AA_list.append(aa_table[DNA_list[i]])
+
+    return ''.join(AA_list)
+
+#print(coding_strand_to_AA("ATGGCTTATGTCCCCTGCTGGCAATAG"))
 
 def gene_finder(dna):
     """ Returns the amino acid sequences that are likely coded by the specified dna
@@ -203,7 +213,7 @@ def gene_finder(dna):
     # TODO: implement this
     pass
 
-#if __name__ == "__main__":
-    #import doctest
+if __name__ == "__main__":
+    import doctest
     #doctest.testmod()
-    #doctest.run_docstring_examples(longest_ORF, globals(), verbose=True)
+    doctest.run_docstring_examples(coding_strand_to_AA, globals(), verbose=True)
