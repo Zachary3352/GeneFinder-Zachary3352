@@ -99,13 +99,15 @@ def find_all_ORFs_oneframe(dna):
     ['ATGCATGAATGTAGA', 'ATGTGCCC']
     """
     i = 0
-    orf1 = []
+    current_orf = []
+    all_found_orfs = []
     while i < len(dna):
         if dna[i:i+3] == codons[3][0]:
-            orf1.append(rest_of_ORF(dna[i:]))
-            i = i + len(orf1) - 3
+            current_orf = rest_of_ORF(dna[i:])
+            all_found_orfs.append(current_orf)
+            i = i + len(current_orf) - 3
         i = i+3
-    return orf1
+    return all_found_orfs
 
 def find_all_ORFs(dna):
     """ Finds all non-nested open reading frames in the given DNA sequence in
@@ -210,10 +212,27 @@ def gene_finder(dna):
         dna: a DNA sequence
         returns: a list of all amino acid sequences coded by the sequence dna.
     """
-    # TODO: implement this
-    pass
 
-if __name__ == "__main__":
-    import doctest
-    #doctest.testmod()
-    doctest.run_docstring_examples(coding_strand_to_AA, globals(), verbose=True)
+    orfs_to_code = []
+    AA_sequences = []
+    threshold = longest_ORF_noncoding(dna, 1500)
+    #print(threshold)
+    all_ORFs_both_strands = find_all_ORFs_both_strands(dna)
+    #print(all_ORFs_both_strands)
+    for orf in all_ORFs_both_strands:
+        if len(orf) > threshold:
+            orfs_to_code.append(orf)
+    #print(orfs_to_code)
+    for ORF in orfs_to_code:
+        AA_sequences.append(coding_strand_to_AA(ORF))
+    return AA_sequences
+
+from load import load_seq
+dna = load_seq("./data/X73525.fa")
+
+print(gene_finder(dna))
+
+# if __name__ == "__main__":
+#     import doctest
+#     doctest.testmod()
+#     doctest.run_docstring_examples(find_all_ORFs_both_strands, globals(), verbose=True)
