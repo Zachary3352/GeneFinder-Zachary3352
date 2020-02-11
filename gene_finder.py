@@ -27,6 +27,9 @@ def get_complement(nucleotide):
     'T'
     >>> get_complement('C')
     'G'
+
+    Didn't feel the need to add another unit test here because these two adequately test the function.
+    I could add unit tests to get the complements for T and G, but this feels unnecessary with such a simple function.
     """
 
     if nucleotide == "A":
@@ -50,6 +53,8 @@ def get_reverse_complement(dna):
     'AAAGCGGGCAT'
     >>> get_reverse_complement("CCGCGTTCA")
     'TGAACGCGG'
+
+    This function's ability is clearly visible using only the provided doctests, so I decided not to add more.
     """
 
     reversed = []
@@ -75,6 +80,12 @@ def rest_of_ORF(dna):
     'ATGAGA'
     >>> rest_of_ORF("ATGTGCCC")
     'ATGTGCCC'
+
+    Added this doctest:
+    >>> rest_of_ORF("ATGGTTTCTAATTAA")
+    'ATGGTTTCTAAT'
+
+    Added the above doctest to demonstrate the third possible stop codon.
     """
 
     i = 0
@@ -97,6 +108,12 @@ def find_all_ORFs_oneframe(dna):
         returns: a list of non-nested ORFs
     >>> find_all_ORFs_oneframe("ATGCATGAATGTAGATAGATGTGCCC")
     ['ATGCATGAATGTAGA', 'ATGTGCCC']
+
+    Added this doctest:
+    >>> find_all_ORFs_oneframe("ATGCATTATTGCCGTGGCTGAGTTATGATTCTTCTCTAA")
+    ['ATGCATTATTGCCGTGGC', 'ATGATTCTTCTC']
+
+    Added the above doctest as an extra example.
     """
     i = 0
     current_orf = []
@@ -121,6 +138,9 @@ def find_all_ORFs(dna):
 
     >>> find_all_ORFs("ATGCATGAATGTAG")
     ['ATGCATGAATGTAG', 'ATGAATGTAG', 'ATG']
+
+    Didn't feel the need to add another doctest here because the above test already adequately tests the function.
+    It shows non-nested ORFs, but includes ORFs that end at the same point.
     """
 
     i = 0
@@ -138,6 +158,12 @@ def find_all_ORFs_both_strands(dna):
         returns: a list of non-nested ORFs
     >>> find_all_ORFs_both_strands("ATGCGAATGTAGCATCAAA")
     ['ATGCGAATG', 'ATGCTACATTCGCAT']
+
+    Added this doctest:
+    >>> find_all_ORFs_both_strands("ATGCATTATTGCCGTGGCTGAGTTATGATTCTTCTCTAA")
+    ['ATGCATTATTGCCGTGGC', 'ATGATTCTTCTC', 'ATGCAT']
+
+    Added the above doctest as an additional, more complicated test.
     """
     dna_reversed = get_reverse_complement(dna)
     all_ORFs_both_strands = find_all_ORFs(dna) + find_all_ORFs(dna_reversed)
@@ -150,6 +176,9 @@ def longest_ORF(dna):
         as a string
     >>> longest_ORF("ATGCGAATGTAGCATCAAA")
     'ATGCTACATTCGCAT'
+
+    Didn't feel the need to add an additional doctest because the provided doctest includes shorter ORFs than the
+    ORFs the doctest finds -- the doctest finds the longest ORF.
     """
 
     all_orfs = find_all_ORFs_both_strands(dna)
@@ -166,7 +195,11 @@ def longest_ORF_noncoding(dna, num_trials):
 
         dna: a DNA sequence
         num_trials: the number of random shuffles
-        returns: the maximum length longest ORF """
+        returns: the maximum length longest ORF
+
+        I don't believe it's possible to add a doctest that always works to this function because the maximum
+        length longest ORF could change based on how many trials are used.
+        """
 
     longest_found_ORF = 0
 
@@ -176,8 +209,6 @@ def longest_ORF_noncoding(dna, num_trials):
         if found_ORF > longest_found_ORF:
             longest_found_ORF = found_ORF
     return longest_found_ORF
-
-#print(longest_ORF_noncoding("ATATGAAGCCCTAGCAGATCCAGTAAGCATAAGTGTGTTAGACATGTAATAGCACAC", 200)) # This works yay!
 
 def coding_strand_to_AA(dna):
     """ Computes the Protein encoded by a sequence of DNA.  This function
@@ -192,7 +223,15 @@ def coding_strand_to_AA(dna):
         'MR'
         >>> coding_strand_to_AA("ATGCCCGCTTT")
         'MPA'
+
+        Added this doctest:
+        >>> coding_strand_to_AA("ATGAAAGACTGTCCCATTTGA")
+        'MKDCPI|'
+
+        Added the above doctest to test using stop codons in coding_strand_to_AA.
     """
+
+
     DNA_list = []
     AA_list = []
 
@@ -204,13 +243,18 @@ def coding_strand_to_AA(dna):
 
     return ''.join(AA_list)
 
-#print(coding_strand_to_AA("ATGGCTTATGTCCCCTGCTGGCAATAG"))
-
 def gene_finder(dna):
     """ Returns the amino acid sequences that are likely coded by the specified dna
 
         dna: a DNA sequence
         returns: a list of all amino acid sequences coded by the sequence dna.
+
+        Added this doctest:
+        >>> gene_finder("ATAGATCCAGTAAGATAGATCCAGTAAGCATAAGTGTGTTAGACAGATCCAGTAAGCATAAGTGTGTTAGACATGAAGCCCTAGCAGATCCAGTAAGCATAAGTGTGTTAGACATAGATCCAGTAAGCATAAGTGTGTTAGACGTAATAGCACACATAGATCCAGTAAGCATAAGTGTGTTAGACAGATCCAGTAAGCATAAGTGTGTTAGACATGAAGCCCTAGCAGATCCAGTAAGCATAAGTGTGTTAGACATAGATCCAGTAAGCATAAGTGTGTTAGACGTAATAGCACACATAGATCCAGTAAGCATAAGTGTGTTAGACAGATCCAGTAAGCATAAGTGTGTTAGACATGAAGCCCTAGCAGATCCAGTAAGCATAAGTGTGTTAGACATAGATCCAGTAAGCATAAGTGTGTTAGACGTAATAGCACACATAGATCCAGTAAGCATAAGTGTGTTAGACAGATCCAGTAAGCATAAGTGTGTTAGACATGAAGCCCTAGCAGATCCAGTAAGCATAAGTGTGTTAGACATAGATCCAGTAAGCATAAGTGTGTTAGACGTAATAGCACACCATAAGTGTGTTAGACAGATCCAGTAAGCATAAGTGTGTTAGACATGAAGCCCTAGCAGATCCAGTAAGCATAAGTGTGTTAGACATAGATCCAGTAAGCATAAGTGTGTTAGACGTAATAGCACAC")
+        ['MLTGSMSNTLMLTGSARASCLTHLCLLDLSNTLMLTGSMCAITSNTLMLTGSMSNTLMLTGSARASCLTHLCLLDLSNTLMLTGSMCAITSNTLMLTGSMSNTLMLTGSARASCLTHLCLLDLSNTLMLTGSMCAITSNTLMLTGSMSNTLMLTGSARASCLTHLCLLDLSNTLMLTGSILLDL']
+
+        Added the above doctest to "test" my final gene_finder. However, because so much DNA is needed to "get past" the
+        threshold, I needed to use my function to add the doctest. So I'm not really sure that it's a proper doctest.
     """
 
     orfs_to_code = []
